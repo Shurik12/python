@@ -1,3 +1,9 @@
 # Python
-В Predict_GK_v_3.ipynb создание, обучение и применение модели предсказания. Сохранение ее в файл f.pkl
-В Predict_GK_v_4.ipynb применение уже обученной модели к новым данным.
+
+Projects:
+- Defind class for realty
+- Defind is building living
+- Postgis, defind building line
+- Prediction cost of realty
+- Semantic parser
+- Different projects
