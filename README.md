@@ -1,9 +1,6 @@
 # Python
 
-Projects:
-- Defind class for realty
-- Defind is building living
-- Postgis, defind building line
-- Prediction cost of realty
-- Semantic parser
-- Different projects
+### Projects:
+1. yandex_music_api
+Download music from yandex musik
+2. 
