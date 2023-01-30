@@ -6,6 +6,7 @@ from Loader import Loader
 from AsyncLoader import Loader as LoaderAsync
 import asyncio
 import time
+from functions import *
 
 # from yandex_music import ClientAsync
 
@@ -36,7 +37,8 @@ def main():
 	logger.info(f'New launch synchron')
 	client = Client(os.environ["YANDEX_MUSIC_TOKEN"]).init()
 	alex = Loader(client, logger)
-	alex.download_like_tracks()
+	alex.download_playlists()
+
 	logger.info(f'Launch finished synchron')
 
 if __name__ == '__main__':
