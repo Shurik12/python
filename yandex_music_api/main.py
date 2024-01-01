@@ -36,8 +36,9 @@ def main():
 	logger = create_logger()
 	logger.info(f'New launch synchron')
 	client = Client(os.environ["YANDEX_MUSIC_TOKEN"]).init()
-	alex = Loader(client, logger)
-	alex.download_playlists()
+	tracks_without_playlist(client, logger)
+	# alex = Loader(client, logger)
+	# alex.download_playlists()
 
 	logger.info(f'Launch finished synchron')
 

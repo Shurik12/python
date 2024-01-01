@@ -10,15 +10,15 @@ def fill_area(mc, block_id):
 
 
 def main():
-	host = "192.168.1.5"
+	host = "192.168.1.6"
 	port = 4711
 	user = "alex"
-	x = -209 # -215
-	y = 62
-	z = -227
+	x = -923 # -215
+	y = 106
+	z = 466
 	mc = Minecraft.create(host, port)
-	# mc.setBlock(x, y, z, block.GRASS.id)
-	fill_area(mc, block.SAND.id)
+	mc.setBlock(x, y, z, block.GRASS.id)
+	# fill_area(mc, block.SAND.id)
 
 
 if __name__ == '__main__':

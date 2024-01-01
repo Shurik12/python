@@ -99,6 +99,7 @@ class Loader:
     @decorator_time_execution
     def download_like_tracks(self):
         tracks_dir = "output/tracks/"
+        lyrics_dir = "output/lyrics/"
         tracks_ids = list(map(lambda track: track["id"], self.client.users_likes_tracks().tracks))
         tracks = self.client.tracks(tracks_ids)
         tracks_for_download = []
@@ -110,6 +111,4 @@ class Loader:
             if name not in loaded_tracks:		
                 tracks_for_download.append(track)
         print ("Got %d tracks" % len(tracks_for_download))
-        self.download_tracks(tracks_for_download, 'output/lyrics/', tracks_dir)
-
-        
+        self.download_tracks(tracks_for_download, lyrics_dir, tracks_dir)

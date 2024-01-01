@@ -2,6 +2,10 @@ from tqdm import tqdm
 
 def insert_to_playlist(client, playlist="bards"):
     playlist_map = {
+        "Disturbed": "1023",
+        "LinkinPark": "1022",
+        "Сергей Орехов": "1021",
+        "Alternative": "1020", 
         "Rap": "1015",
         "Classic": "1014",
         "Punk Rock": "1013",
@@ -45,21 +49,22 @@ def insert_to_playlist(client, playlist="bards"):
             client.users_playlists_insert_track("1010", track["id"], track["albums"][0]["id"], revision = i)
             i+=1
 
-def tracks_without_playlist(client):
+def tracks_without_playlist(client, logger):
     tracks_in_playlist = set()
     playlists = client.users_playlists_list()
     for playlist in playlists:
         for track in playlist.fetch_tracks():
             tracks_in_playlist.add(str(track.id))
-    print (len(tracks_in_playlist))
+    logger.info(f'Count tracks in any playlist: {len(tracks_in_playlist)}')
     all_tracks = set(map(lambda track: track["id"], client.users_likes_tracks().tracks))
-    print (len(all_tracks))
+    logger.info(f'All tracks: {len(all_tracks)}')
     tracks_out_playlist = all_tracks - tracks_in_playlist
-    print (len(tracks_out_playlist))
+    logger.info(f'Count tracks out of playlist: {len(tracks_out_playlist)}')
     tracks = client.tracks(tracks_out_playlist)
     i = 1
+    logger.info(f'List of tracks out of playlist:')
     for track in tracks:
         artist = ", ".join(track.artists_name()).strip().replace("/", "\\")
-        print (artist + " - " + track.title.replace("/", "\\"))
-        client.users_playlists_insert_track("1016", track["id"], track["albums"][0]["id"], revision = i)
+        logger.info(artist + " - " + track.title.replace("/", "\\"))
+        # client.users_playlists_insert_track("1024", track["id"], track["albums"][0]["id"], revision = i)
         i+=1
