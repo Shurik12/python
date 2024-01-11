@@ -1,26 +1,7 @@
 from tqdm import tqdm
 
+
 def insert_to_playlist(client, logger, playlist="calm_rock"):
-    playlist_map = {
-        "Disturbed": "1023",
-        "LinkinPark": "1022",
-        "Сергей Орехов": "1021",
-        "Alternative": "1020", 
-        "Rap": "1015",
-        "Classic": "1014",
-        "Punk Rock": "1013",
-        "Rock and Roll": "1011",
-        "Русское народное": "1010",
-        "Авторская песня": "1009",
-        "КиШ": "1008",
-        "Pop": "1007",
-        "Tango": "1006",
-        "Calm rock": "1005",
-        "Guitar songs": "1003",
-        "Hard Rock": "1002",
-        "Vals": "1001",
-        "Milonga": "1000"
-    }
     bards = set([
         "Чароит", "Владимир Высоцкий", 
         "Александр Городницкий", "Булат Окуджава", "Юрий Кукин",
@@ -35,7 +16,7 @@ def insert_to_playlist(client, logger, playlist="calm_rock"):
         "Сектор Газа", "Василий Васильев", "Магелланово Облако", "Би-2", "Крематорий", "ЧайФ", 
         "Арктида", "Мумий Тролль", "ДДТ"
     ])
-    calm_rock = set([
+    rock = set([
         "Deep Purple", "Led Zeppelin"
     ])
     russain_natural = set([

@@ -19,8 +19,7 @@ class Loader:
             execution_time = 'Execution time {:.2f} seconds'.format(end_execution - start_execution)
             print(execution_time)
         return time_execution 
-
-    # return list of play_list ()    
+    
     def get_playlists(self):
         playlists = self.client.users_playlists_list()
         return [f'"{playlist.title}": "{playlist.playlist_id.split(":")[1]}"' for playlist in playlists]
@@ -110,42 +109,44 @@ class Loader:
     @decorator_time_execution
     def download_playlists(self):
         playlists = self.client.users_playlists_list()
-        print (type(playlists[1]))
         return [self.download_playlist(playlist) for playlist in playlists]
 
+    def get_playlist_map(self):
+        # "kind", "revision", "track_count"
+        playlists = self.client.users_playlists_list()
+        playlist_map = dict((playlist.title, playlist.revision) for playlist in playlists)
+        return playlist_map
 
+    def get_artists_from_playlist(self, playlist_title):
+        playlists = self.client.users_playlists_list()
+        for p in playlists:
+            if p.title == playlist_title:
+                playlist = p
+                tracks_ids = list(map(lambda track: track["id"], playlist.fetch_tracks()))
+                if tracks_ids:
+                    tracks = self.client.tracks(tracks_ids)
+                    return set(", ".join(track.artists_name()).strip().replace("/", "\\") for track in tracks)
+                return set()
+        return set()
 
-
-
-
-    # @decorator_time_execution
-    # def download_like_tracks(self):
-
-    #     playlist_dir = f'{self.output}/Like'
-    #     tracks_dir = f'{playlist_dir}/tracks'
-    #     lyrics_dir = f'{playlist_dir}/lyrics'
-
-    #     # Create Like playlist directory if not exists
-    #     if playlist.title not in set(os.listdir(self.output)): 
-    #         os.mkdir(playlist_dir)
-    #         os.mkdir(tracks_dir)
-    #         os.mkdir(lyrics_dir)
-
-    #     # Get already loaded tracks (already on yandex disk and file system)
+    def add_like_to_playlist(self):
         
-    #     tracks_ids = list(map(lambda track: track["id"], self.client.users_likes_tracks().tracks))
-        
-    #     tracks = self.client.tracks(tracks_ids)
-    #     self.logger.info(f'All tracks in playlist {playlist.title}: {len(tracks)}')
-    #     loaded_tracks = set(os.listdir(tracks_dir))
-    #     self.logger.info(f'Already loaded tracks in playlist {playlist.title}: {len(loaded_tracks)}')
+        playlists = self.client.users_playlists_list()
 
-    #     # Download new tracks
-    #     tracks_for_download = []
-    #     for track in tqdm(tracks, f'Get tracks for download of {playlist.title}'):
-    #         artist = ", ".join(track.artists_name()).strip().replace("/", "\\")
-    #         name = artist + " - " + track.title.replace("/", "\\") + ".mp3"
-    #         if name not in loaded_tracks:		
-    #             tracks_for_download.append(track)
-    #     self.logger.info(f'Tracks for download: {len(tracks_for_download)}')
-    #     self.download_tracks(tracks_for_download, lyrics_dir, tracks_dir)
+        all_tracks = set(map(lambda track: track["id"], self.client.users_likes_tracks().tracks))
+        tracks_in_playlist = set()
+        for playlist in playlists:
+            for track in playlist.fetch_tracks():
+                tracks_in_playlist.add(str(track.id))
+        tracks_out_playlist = all_tracks - tracks_in_playlist
+        tracks = self.client.tracks(tracks_out_playlist)
+
+        for playlist in tqdm(playlists, f'Playlists'):
+            artists = self.get_artists_from_playlist(playlist.title)
+            for track in tqdm(tracks, f'Check tracks'):
+                artist = ", ".join(track.artists_name()).strip().replace("/", "\\")
+                if artist in artists:
+                    title = track.title.replace("/", "\\")
+                    self.logger.info(f'Add {title} to {playlist.title}')
+                    self.client.users_playlists_insert_track(playlist.kind, track.id, track.albums[0].id, revision=playlist.revision)
+                    playlist.revision += 1

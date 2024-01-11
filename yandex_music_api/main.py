@@ -38,7 +38,10 @@ def main():
 	client = Client(os.environ["YANDEX_MUSIC_TOKEN"]).init()
 	tracks_without_playlist(client, logger)
 	# insert_to_playlist(client, logger)
-	# alex = Loader(client, logger)
+	alex = Loader(client, logger)
+	# print (alex.add_like_to_playlist())
+	# print (alex.get_playlist_map())
+	# print (alex.get_artists_from_playlist("Hard rock"))
 	# alex.download_playlists()
 	# alex.download_playlist(None)
 
